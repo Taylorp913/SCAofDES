@@ -88,7 +88,8 @@ switch nargin
                 if keyParityCheck(key) == 1
                     K = key(:)';
                 else
-                    error('Key parity check FAILED!!!')
+                    K = key(:)';
+                    %error('Key parity check FAILED!!!')
                 end
             elseif numel(key) == 56 % add parity bits
                 K = reshape(key,7,8)';
