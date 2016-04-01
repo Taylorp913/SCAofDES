@@ -9,6 +9,6 @@ if Output==TargetCyphertext
     disp('Success!: KEY HAS BEEN DISCOVERED');
     success = 1;
 else
-    disp('ERROR OF ERRORS: INCORRECT KEY');
+    %disp('ERROR OF ERRORS: INCORRECT KEY');
     success = 0;
 end

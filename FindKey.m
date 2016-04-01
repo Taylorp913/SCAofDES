@@ -1,11 +1,8 @@
-
-
-I = [57;12;60;39;1;14;26;56];
-%T = [de2bi(I-1),zeros(8,1)];
+function key = FindKey(I) 
+%I = [57;12;60;39;1;14;26;56];
 T = fliplr([de2bi(I-1)]);
-%T = [de2bi(I-1)];
 Binary = [T(1,:),T(2,:),T(3,:),T(4,:),T(5,:),T(6,:),T(7,:),T(8,:)];
-key64 = ones(1,64)*4;
+key64 = zeros(1,64);
 key56 = ones(1,56)*3;
 
 PC1L = [57	49	41	33	25	17	9 ...
@@ -29,44 +26,39 @@ rshift = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,
 for i = 1:48
     key56(PC2(i)) = Binary(i);
 end
-key56(9)=2;
-key56(18)=2;
-key56(22)=2;
-key56(25)=2;
-key56(35)=2;
-key56(38)=2;
-key56(43)=2;
-key56(54)=2;
-
 for i = 1:56
     key56b(rshift(i)) = key56(i);
 end
-
 for i = 1:28
     key64(PC1L(i)) = key56b(i);
     key64(PC1R(i)) = key56b(i+28);
 end
-
-keytest = [0 1 1 0 1 0 1 0 0 1 1 0 0 1 0 1 0 1 1 1 1 0 0 0 0 1 1 0 1 0 1 0 0 1 1 0 0 1 0 1 0 1 1 1 1 0 0 0 0 1 1 0 1 0 1 0 0 1 1 0 0 1 0 1];
-
-
+%keytest = [0 1 1 0 1 0 1 0 0 1 1 0 0 1 0 1 0 1 1 1 1 0 0 0 0 1 1 0 1 0 1 0 0 1 1 0 0 1 0 1 0 1 1 1 1 0 0 0 0 1 1 0 1 0 1 0 0 1 1 0 0 1 0 1];
 
 %%test possible keys
-bits = [1:256];
-bits = [0 1 0 0 1 0 0 1];
-%bits = [0 0 0 0 0 0 0 0];
-for i = 1:1
-    keytest(8) = bits(i,1);
-    keytest(16) = bits(i,2); 
-    keytest(24) = bits(i,3);
-    keytest(32) = bits(i,4);
-    keytest(40) = bits(i,5);
-    keytest(48) = bits(i,6);
-    keytest(56) = bits(i,7);
-    keytest(64) = bits(i,8);
-    success = TestKey(keytest);
+bits = de2bi([0:128]');
+for i = 1:129
+
+    key64(6)=bits(i,1);
+    key64(7)=bits(i,2);
+    key64(11)=bits(i,3);
+    key64(12)=bits(i,4);
+    key64(43)=bits(i,5);
+    key64(46)=bits(i,6);
+    key64(50)=bits(i,7);
+    key64(52)=bits(i,8);
+    success = TestKey(key64);
     if 1 == success
         break
     end
 end
- key = log2hex(keytest)
+%add parity
+key64(8)=mod(sum(key64([1:8])),2);
+key64(16)=mod(sum(key64([9:16])),2);
+key64(24)=mod(sum(key64([17:24])),2);
+key64(32)=mod(sum(key64([25:32])),2);
+key64(40)=mod(sum(key64([33:40])),2);
+key64(48)=mod(sum(key64([41:48])),2);
+key64(56)=mod(sum(key64([49:56])),2);
+key64(64)=mod(sum(key64([57:64])),2);
+ key = log2hex(key64);
