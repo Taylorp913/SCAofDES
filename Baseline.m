@@ -31,8 +31,8 @@ for Trace = 1:length(files)
         [~,Subkey(k)] = max(Corrs(k, :, Ish(k)));
     end
     disp(Subkey');
-    cnt 
-    Trace
+    cnt; 
+    Trace;
     if ~isequal(old,Subkey)
         cnt = 0;
     else
