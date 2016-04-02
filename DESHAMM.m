@@ -61,7 +61,7 @@ function [Corrout] = DESHAMM(input64,mode,key)
 %%                           0. Initialization                           %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 0.1 check input
-error(nargchk(1,3,nargin));
+narginchk(1,3);
 switch nargin
     case 1
         mode = 'ENC';
