@@ -259,9 +259,9 @@ guess = dec2bin([0:63],6);
                 mixed_R = KM(expended_R,subKeys(16-i+1,:)); % mixed with sub-key: 48-bit
         end
         for bit=0:63
-            binStart = guess(bit,:)
-            for len=(1+(Sbox-1)*6):length(binStart)+(Sbox-1)*6
-                subKeys(i,len) = str2num(binStart(len-(Sbox-1)*6));
+            bitguess = guess(bit+1,:);
+            for j=(1+(Sbox-1)*6):6+(Sbox-1)*6
+                subKeys(i,j) = str2num(bitguess(j-(Sbox-1)*6));
             end
             mixed_R = KM(expended_R,subKeys(i,:));
             substituted_R = SBOX(mixed_R); % substitution: 48-bit to 32-bit
