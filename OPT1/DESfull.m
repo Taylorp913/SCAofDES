@@ -1,4 +1,4 @@
-function [Corrout] = DESHAMM(input64,mode,key)
+function [varargout] = DESfull(input64,mode,key)
 %DES: Data Encryption Standard
 % Encrypt/Decrypt a 64-bit message using a 64-bit key using the Feistel Network
 % -------------------------------------------------------------------------
@@ -235,54 +235,33 @@ switch mode
         R{1} = HALF_L(C);       
 end
 % 3.2 cipher round 1 to 16
-switch mode
-            case 'ENC' % if encryption, apply sub-keys in the original order
-                ind = [9 17 23 31;...
-        13 28 2 18;...
-        24 16 30 6;...
-        26 20 10 1;...
-        8 14 25 3;...
-        4 29 11 19;...
-        32 12 22 7;...
-        5 27 15 21];
-    case 'DEC' 
-        ind = [9 17 23 31;...
-        13 28 2 18;...
-        24 16 30 6;...
-        26 20 10 1;...
-        8 14 25 3;...
-        4 29 11 19;...
-        32 12 22 7;...
-        5 27 15 21];          
-        end
-
-    
-Corrout =  zeros(8,64);
-hammout = zeros(1, 64);
-guess = dec2bin([0:63],6);
-    for Sbox = 1:8
-        i = 1;
-        L{i+1} = R{i}; % half key: 32-bit
-        expended_R = EF(R{i}); % expended half key: 32-bit to 48-bit
-        for bit=0:63
-            bitguess = guess(bit+1,:);
-            for j=(1+(Sbox-1)*6):6+(Sbox-1)*6
-                subKeys(i,j) = str2num(bitguess(j-(Sbox-1)*6));
-            end
+for i = 1:16
+     L{i+1} = R{i}; % half key: 32-bit
+     expended_R = EF(R{i}); % expended half key: 32-bit to 48-bit
+     switch mode
+        case 'ENC' % if encryption, apply sub-keys in the original order
             mixed_R = KM(expended_R,subKeys(i,:)); % mixed with sub-key: 48-bit
-            substituted_R = SBOX(mixed_R); % substitution: 48-bit to 32-bit
-            permuted_R = PBOX(reshape(substituted_R',1,32)); % permutation: 32-bit
-            R{i+1} = xor(L{i},permuted_R); % Feistel function: 32-bit
-            
-            R1 = R{i};
-            R2 = R{i+1};
-            hamm = HammCheck(R1,R2,ind(Sbox,:));
-            hammout(bit+1) = hamm;
-        end
-        Corrout(Sbox,:) = hammout;
-       
-    end
- return;
+        case 'DEC' % if decryption, apply sub-keys in the reverse order
+            mixed_R = KM(expended_R,subKeys(16-i+1,:)); % mixed with sub-key: 48-bit
+     end
+     substituted_R = SBOX(mixed_R); % substitution: 48-bit to 32-bit
+     permuted_R = PBOX(reshape(substituted_R',1,32)); % permutation: 32-bit
+     R{i+1} = xor(L{i},permuted_R); % Feistel function: 32-bit
+end
+% 3.3 final permutation
+switch mode
+    case 'ENC'
+        C = [R{end},L{end}];    
+    case 'DEC'
+        C = [L{end},R{end}];
+end
+output64 = FP(C);
+varargout{1} = output64;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                   END                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 
 

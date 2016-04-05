@@ -1,6 +1,6 @@
 function Traces = SortTraces(filelocation,files);
-disp('Sorting Trac
-num = length(files);
+disp('Sorting Traces');
+num = 500;%length(files);
 
 A = [(1:num)',  zeros(num,1)];
 

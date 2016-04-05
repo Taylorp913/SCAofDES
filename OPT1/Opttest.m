@@ -1,5 +1,5 @@
-%clear all;
-%clc;
+clear all;
+clc;
 filelocation = 'C:\Users\Taylor\Desktop\SCA Files\CSV3\';
 files = dir(strcat(filelocation,'*bin.csv'));
 plaintexts = extracthex(files);
@@ -15,9 +15,9 @@ old = 0;
 cnt = 0;
 
 TargetSubkey =[57;12;60;39;1;14;26;56];
-%Traces=SortTraces(filelocation,files);
-%Traces=SortTracesOPT1(filelocation,files,plaintexts);
-Traces = 1:length(files);
+
+Traces=SortTraces(filelocation,files);
+%Traces = 1:length(files);
 TotalTraces = 0;
 index = 1;
 

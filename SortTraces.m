@@ -6,15 +6,16 @@ A = [(1:num)',  zeros(num,1)];
 
 for i=1:num%length(files)
     Data = csvread(strcat(filelocation, files(i).name));
-    A(i,2) = max(Data(5730:5740,2)); 
+    A(i,2) = mean(Data(5730:5740,2)); 
 end
 
 A = sortrows(A,2);
-for j=1:2:(num/2)+1
-    out(j)=A(j,1);
-    out(j+1)=A(num-j,1);
+i = 0;
+for j=1:2:num
+    out(j)=A(i+1,1);
+    out(j+1)=A(num-i,1);
+    i = i+1;
 end
-
 
 Traces = out;
 

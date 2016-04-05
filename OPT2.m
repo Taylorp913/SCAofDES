@@ -1,6 +1,6 @@
 clear all;
 clc;
-filelocation = 'C:\Users\Taylor\Desktop\SCA Files\CSV\';
+filelocation = 'C:\Users\Taylor\Desktop\SCA Files\CSV3\';
 files = dir(strcat(filelocation,'*bin.csv'));
 plaintexts = extracthex(files);
 
